@@ -35,7 +35,7 @@ class PlayTrailer:
             
     def debug(self, msg):
         if 'true' in __addon__.getSetting('debug'):
-            xbmc.log(f'>>>>  {__addonname__} <<<<  {msg}')
+            xbmc.log(f'>>>>  {__addonname__} <<<<  {msg}', xbmc.LOGINFO)
         
     def notify(self, msg):
         if __addon__.getSettingBool('notify') is True:
