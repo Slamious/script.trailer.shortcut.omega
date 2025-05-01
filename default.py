@@ -1,15 +1,17 @@
 # -*- coding: utf-8 -*-
 
+from urllib.parse import quote
 import xbmc
+import xbmcvfs
 import xbmcaddon
-import urllib
 
-__addon__               = xbmcaddon.Addon()
-__addon_id__            = __addon__.getAddonInfo('id')
-__addonname__           = __addon__.getAddonInfo('name')
-__icon__                = __addon__.getAddonInfo('icon')
-__addonpath__           = xbmc.translatePath(__addon__.getAddonInfo('path'))
-__lang__                = __addon__.getLocalizedString
+__addon__ = xbmcaddon.Addon()
+__addon_id__ = __addon__.getAddonInfo('id')
+__addonname__ = __addon__.getAddonInfo('name')
+__icon__ = __addon__.getAddonInfo('icon')
+__addonpath__ = xbmcvfs.translatePath(__addon__.getAddonInfo('path'))
+__lang__ = __addon__.getLocalizedString
+
 
 class PlayTrailer:
     
@@ -21,7 +23,7 @@ class PlayTrailer:
     
         trailer = xbmc.getInfoLabel('ListItem.Trailer')
         if 'plugin://plugin.video.youtube' not in trailer:
-            trailer = urllib.quote(trailer).replace('%3A', ':')
+            trailer = quote(trailer).replace('%3A', ':')
         
         self.debug(trailer)
         
@@ -33,10 +35,12 @@ class PlayTrailer:
             
     def debug(self, msg):
         if 'true' in __addon__.getSetting('debug'):
-            xbmc.log('>>>> ' + __addonname__ + ' <<<< ' + msg)
+            xbmc.log(f'>>>>  {__addonname__} <<<<  {msg}')
         
     def notify(self, msg):
-        if 'true' in __addon__.getSetting('notify'):
-            xbmc.executebuiltin('Notification(' + __addonname__ + ', ' + msg.encode('utf-8') + ', 4000, ' + __icon__ + ')')
-        
-PlayTrailer()
+        if __addon__.getSettingBool('notify') is True:
+            xbmc.executebuiltin(f'Notification({__addonname__} {msg}, 4000, __icon__)')
+
+if __name__ == '__main__':
+    PlayTrailer()
+    
