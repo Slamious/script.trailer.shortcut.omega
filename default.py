@@ -4,6 +4,7 @@ from urllib.parse import quote
 import xbmc
 import xbmcvfs
 import xbmcaddon
+from xbmcgui import Dialog
 
 __addon__ = xbmcaddon.Addon()
 __addon_id__ = __addon__.getAddonInfo('id')
@@ -11,12 +12,13 @@ __addonname__ = __addon__.getAddonInfo('name')
 __icon__ = __addon__.getAddonInfo('icon')
 __addonpath__ = xbmcvfs.translatePath(__addon__.getAddonInfo('path'))
 __lang__ = __addon__.getLocalizedString
+__notification__ = Dialog().notification
 
 
 class PlayTrailer:
     
     def __init__(self):
-    
+        
         self.getTrailer()
     
     def getTrailer(self):
@@ -25,7 +27,7 @@ class PlayTrailer:
         if 'plugin://plugin.video.youtube' not in trailer:
             trailer = quote(trailer).replace('%3A', ':')
         
-        self.debug(trailer)
+        self.debug(f'Trailer = {trailer}')
         
         if len(trailer) > 0:
             xbmc.Player().play(trailer)
@@ -39,7 +41,7 @@ class PlayTrailer:
         
     def notify(self, msg):
         if __addon__.getSettingBool('notify') is True:
-            xbmc.executebuiltin(f'Notification({__addonname__} {msg}, 4000, __icon__)')
+            __notification__(__addonname__, msg, icon=__icon__, time=4000)
 
 if __name__ == '__main__':
     PlayTrailer()
